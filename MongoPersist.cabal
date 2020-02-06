@@ -23,6 +23,7 @@ executable MongoPersist
   build-depends:       base >=4.12 && <4.13,
                        persistent,
                        mongoDB,
+                       text,
                        -- network ==2.8.0.1,
                        persistent-template,
                        persistent-mongoDB,

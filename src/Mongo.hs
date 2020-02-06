@@ -11,7 +11,8 @@
 {-# LANGUAGE StandaloneDeriving         #-}
 {-# LANGUAGE UndecidableInstances       #-}
 
-import Database.Persist (insert, (==.), selectList, Entity(..))
+import Database.Persist (insert, (==.), selectList, Entity(..), PersistField(..), PersistValue(PersistByteString))
+import Database.Persist.Sql (PersistFieldSql(..))
 import Database.Persist.TH
 import Database.Persist.MongoDB (runMongoDBPool, withMongoDBConn, master, Action)
 import Control.Monad.Cont (liftIO)
@@ -23,7 +24,7 @@ share
     [mkPersist mongoSettings]
     [persistLowerCase|
 User
-    name String
+    name Name
     age Int Maybe
     deriving Show
 Blogpost
