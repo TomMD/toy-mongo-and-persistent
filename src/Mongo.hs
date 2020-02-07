@@ -27,7 +27,7 @@ share
     [persistLowerCase|
 User
     name Name
-    age Int Maybe
+    age Age Maybe
     gender Person
     deriving Show
 Blogpost
@@ -47,7 +47,7 @@ main =
         2000
         (runMongoDBPool
              master
-             (do user <- insert (User "John Doe" (Just 35) Male)
+             (do user <- insert (User "John Doe" (Just (Age 35)) Male)
                  liftIO $ print user
                  vals <- selectList [ UserName ==. "John Doe" ] [] :: Action IO [Entity User]
                  liftIO $ print (map entityVal vals)
