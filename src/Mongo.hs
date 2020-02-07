@@ -7,20 +7,23 @@
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE QuasiQuotes                #-}
 {-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE TypeApplications           #-}
 {-# LANGUAGE DerivingStrategies         #-}
 {-# LANGUAGE StandaloneDeriving         #-}
 {-# LANGUAGE UndecidableInstances       #-}
+{-# LANGUAGE RecordWildCards            #-}
 
-import Database.Persist (insert, (==.), selectList, Entity(..), PersistField(..), PersistValue(PersistByteString))
+import Database.Persist (insert, (>=.), (==.), selectList, Entity(..), PersistField(..), PersistValue(PersistByteString))
 import Database.Persist.Sql (PersistFieldSql(..))
 import Database.Persist.TH
 import Database.Persist.MongoDB (runMongoDBPool, withMongoDBConn, master, Action
                                 , (=:))
 import Database.MongoDB.Admin (createIndex,index)
 import Control.Monad.Cont (liftIO)
-import MongoImport
 import Database.MongoDB.Connection (PortID(PortNumber))
 import Language.Haskell.TH (Type(..))
+
+import MongoImport
 
 share
     [mkPersist mongoSettings]
@@ -32,6 +35,7 @@ User
     deriving Show
 Blogpost
     title String
+    pet Animal
     uid UserId
     UniqueUser uid
     deriving Show
@@ -53,6 +57,7 @@ main =
                  liftIO $ print (map entityVal vals)
                  createIndex $ index "Blogpost" [ "title" =: (1 :: Int) {- accending -}
                                                 , "uid"   =: (negate 1 :: Int) {- decending -} ]
-                 bps <- selectList [ BlogpostTitle ==. "D.N.E." ] [] :: Action IO [Entity Blogpost]
+                 _  <- insert (Blogpost "Does actually exist" (Cat (Age 34)) user)
+                 bps <- selectList [ BlogPet ==. "Does actually exist" ] [] :: Action IO [Entity Blogpost]
                  liftIO (print bps)
                  return ()))
