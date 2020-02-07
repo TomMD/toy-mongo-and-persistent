@@ -16,6 +16,11 @@ import Data.String
 -- automatically handling the (de)serialization for us.
 newtype Name = Name T.Text deriving (Eq, Ord, Show, IsString)
 
+-- |Example of deriving persistent fields
+data Person = Male | Female | Other
+  deriving (Eq, Show, Read)
+derivePersistField "Person"
+
 instance PersistFieldSql Name where
     sqlType _ = SqlOther (T.pack "UserName")
 
